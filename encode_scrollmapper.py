@@ -29,7 +29,7 @@ def read_embeddings(path):
             b = int(row["b"])
             c = int(row["c"])
             v = int(row["v"])
-            e = model.encode(row["t"]).tolist()
+            e = model.encode(row["t"])
             yield {
                 "b": b,
                 "c": c,
