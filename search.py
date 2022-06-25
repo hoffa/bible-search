@@ -11,6 +11,22 @@ def get_model():
     return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
+def read_books_df(path):
+    df = pandas.read_parquet(path)
+    df.set_index("b", inplace=True)
+    return df
+
+
+def read_text_df(path):
+    df = pandas.read_parquet(path)
+    df.set_index(["b", "c", "v"], inplace=True)
+    return df
+
+
+def read_embeddings_df(path):
+    return pandas.read_parquet(path)
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--books", required=True, type=Path)
@@ -22,23 +38,15 @@ def main():
     model = get_model()
     s = model.encode(args.query)
 
-    books = pandas.read_parquet(args.books)
-    books.set_index("b", inplace=True)
-    print(books)
-    print(books.loc[1]["n"])
+    books_df = read_books_df(args.books)
 
-    text = pandas.read_parquet(args.text)
-    text.set_index(["b", "c", "v"], inplace=True)
+    text_df = read_text_df(args.text)
 
-    embeddings = pandas.read_parquet(args.embeddings)
-    print(embeddings)
-    # print(embeddings)
-
-    # print(text.loc[(53, 2, 11)]["t"])
+    embeddings_df = read_embeddings_df(args.embeddings)
 
     # sort by cosine similarity against query
     verses = (
-        embeddings.sort_values(
+        embeddings_df.sort_values(
             by="e",
             key=lambda col: col.map(lambda e: util.cos_sim(s, e)),
             ascending=False,
@@ -48,8 +56,8 @@ def main():
     )
 
     for verse in verses:
-        a = books.loc[verse["b"]]["n"]
-        c = text.loc[(verse["b"], verse["c"], verse["v"])]["t"]
+        a = books_df.loc[verse["b"]]["n"]
+        c = text_df.loc[(verse["b"], verse["c"], verse["v"])]["t"]
         print(f'{a} {verse["c"]}:{verse["v"]} - {c}')
 
     # apply cosine similarity to each embedding
