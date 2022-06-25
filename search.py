@@ -3,7 +3,7 @@ import sys
 
 from sentence_transformers import SentenceTransformer, util
 
-model = SentenceTransformer("all-MiniLM-L6-v2")
+model = SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
 def main():
