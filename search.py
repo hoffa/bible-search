@@ -1,7 +1,6 @@
 import argparse
-import json
-import sys
 from pathlib import Path
+from dataclasses import dataclass
 
 import pandas
 from sentence_transformers import SentenceTransformer, util
@@ -11,20 +10,45 @@ def get_model():
     return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
-def read_books_df(path):
-    df = pandas.read_parquet(path)
-    df.set_index("b", inplace=True)
-    return df
+def read_dfs(dir):
+    books_df = pandas.read_parquet(dir / "books.parquet")
+    books_df.set_index("b", inplace=True)
+
+    text_df = pandas.read_parquet(dir / "text.parquet")
+    text_df.set_index(["b", "c", "v"], inplace=True)
+
+    embeddings_df = pandas.read_parquet(dir / "embeddings.parquet")
+
+    return books_df, text_df, embeddings_df
 
 
-def read_text_df(path):
-    df = pandas.read_parquet(path)
-    df.set_index(["b", "c", "v"], inplace=True)
-    return df
+@dataclass
+class SearchResult:
+    book: str
+    chapter: int
+    verse: int
+    text: str
 
 
-def read_embeddings_df(path):
-    return pandas.read_parquet(path)
+def search(books_df, text_df, embeddings_df, query_embedding, results=100):
+    df = embeddings_df.sort_values(
+        by="e",
+        ascending=False,
+        key=lambda col: col.map(lambda e: util.cos_sim(query_embedding, e)),
+    ).head(results)[["b", "c", "v"]]
+    results = df.to_dict(orient="records")
+    for result in results:
+        b = result["b"]
+        c = result["c"]
+        v = result["v"]
+        book = books_df.loc[b]["n"]
+        text = text_df.loc[(b, c, v)]["t"]
+        yield SearchResult(
+            book=book,
+            chapter=c,
+            verse=v,
+            text=text,
+        )
 
 
 def main():
@@ -38,39 +62,10 @@ def main():
     model = get_model()
     s = model.encode(args.query)
 
-    books_df = read_books_df(args.books)
+    books_df, text_df, embeddings_df = read_dfs(args.books.parent)
 
-    text_df = read_text_df(args.text)
-
-    embeddings_df = read_embeddings_df(args.embeddings)
-
-    # sort by cosine similarity against query
-    verses = (
-        embeddings_df.sort_values(
-            by="e",
-            key=lambda col: col.map(lambda e: util.cos_sim(s, e)),
-            ascending=False,
-        )
-        .head(10)[["b", "c", "v"]]
-        .to_dict(orient="records")
-    )
-
-    for verse in verses:
-        a = books_df.loc[verse["b"]]["n"]
-        c = text_df.loc[(verse["b"], verse["c"], verse["v"])]["t"]
-        print(f'{a} {verse["c"]}:{verse["v"]} - {c}')
-
-    # apply cosine similarity to each embedding
-    # cosine_similarity = util.batch_dot(s, embeddings.values)
-
-    # get top 100 util.cos_sim() rows
-    # print(embeddings.sort_values("e", ascending=False).head(100))
-
-    # s = model.encode(sys.argv[1])
-    # for l in sys.stdin:
-    #    obj = json.loads(l)
-    #    sim = float(util.cos_sim(s, obj["e"]))
-    #    print(f'{sim:.8f}\t{obj["n"]}\t{obj["t"]}')
+    for result in search(books_df, text_df, embeddings_df, s):
+        print(result.book, result.chapter, result.verse, result.text)
 
 
 if __name__ == "__main__":
