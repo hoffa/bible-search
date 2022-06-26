@@ -1,30 +1,27 @@
-# bible
+# bible-search
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
 
-Bible data from https://github.com/scrollmapper/bible_databases
+Semantically search the Bible.
 
-- `encode.py` encodes the data to vectors
-- `search.py` performs semantic search on the vectors
+## Data format
 
-## Format
+Bible data is stored in 3 Parquet files:
 
-- embeddings.parquet has b,c,v,e
-- books.parquet has b,n
-- text.parquet has b,c,v,t
+1. The Bible text with columns `b`, `c`, `v` and `t`.
+2. Verse embeddings with columns `b`, `c`, `v` and `e`.
+3. Book number-to-name mapping with columns `b` and `n`.
 
-- b int (book id)
-- c int (chapter)
-- v int (verse)
-- t string (text)
-- e list<float> (embedding)
-- n string (book name)
+Where:
 
-```bash
-python encode.py --text t_web.csv --books key_english.csv --dir web
-```
-
-## Building the data
+- `b` is the book number.
+- `n` is the book name.
+- `c` is the chapter number.
+- `v` is the verse number.
+- `t` is the verse text.
+- `e` is the verse embedding.
+- 
+## Generating the data
 
 ```bash
 ./generate_data.sh
