@@ -20,7 +20,7 @@ Where:
 - `v` is the verse number.
 - `t` is the verse text.
 - `e` is the verse embedding.
-- 
+
 ## Generating the data
 
 ```bash
