@@ -10,16 +10,20 @@ def get_model():
     return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
-def read_dfs(dir):
-    books_df = pandas.read_parquet(dir / "books.parquet")
-    books_df.set_index("b", inplace=True)
+def read_books_df(path):
+    df = pandas.read_parquet(path)
+    df.set_index("b", inplace=True)
+    return df
 
-    text_df = pandas.read_parquet(dir / "text.parquet")
-    text_df.set_index(["b", "c", "v"], inplace=True)
 
-    embeddings_df = pandas.read_parquet(dir / "embeddings.parquet")
+def read_text_df(path):
+    df = pandas.read_parquet(path)
+    df.set_index(["b", "c", "v"], inplace=True)
+    return df
 
-    return books_df, text_df, embeddings_df
+
+def read_embeddings_df(path):
+    return pandas.read_parquet(path)
 
 
 @dataclass
@@ -30,13 +34,16 @@ class SearchResult:
     text: str
 
 
-def search(books_df, text_df, embeddings_df, query_embedding, results=100):
-    df = embeddings_df.sort_values(
+def _search(embeddings_df, query_embedding, results):
+    return embeddings_df.sort_values(
         by="e",
         ascending=False,
         key=lambda col: col.map(lambda e: util.cos_sim(query_embedding, e)),
     ).head(results)[["b", "c", "v"]]
-    results = df.to_dict(orient="records")
+
+
+def search(books_df, text_df, embeddings_df, query_embedding, results=100):
+    results = _search(embeddings_df, query_embedding, results).to_dict(orient="records")
     for result in results:
         b = result["b"]
         c = result["c"]
@@ -62,7 +69,9 @@ def main():
     model = get_model()
     s = model.encode(args.query)
 
-    books_df, text_df, embeddings_df = read_dfs(args.books.parent)
+    books_df = read_books_df(args.books)
+    text_df = read_text_df(args.text)
+    embeddings_df = read_embeddings_df(args.embeddings)
 
     for result in search(books_df, text_df, embeddings_df, s):
         print(result.book, result.chapter, result.verse, result.text)
