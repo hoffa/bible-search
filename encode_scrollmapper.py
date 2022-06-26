@@ -1,5 +1,6 @@
 import argparse
 import csv
+from dataclasses import dataclass
 from pathlib import Path
 
 import pandas
@@ -8,45 +9,68 @@ from sentence_transformers import SentenceTransformer
 model = SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
-def read_text(path):
+@dataclass
+class TextRow:
+    book: int
+    chapter: int
+    verse: int
+    text: str
+
+
+@dataclass
+class BooksRow:
+    book: int
+    name: str
+
+
+def _parse_text(path):
     with path.open() as f:
         for row in csv.DictReader(f):
-            b = int(row["b"])
-            c = int(row["c"])
-            v = int(row["v"])
-            t = row["t"]
-            yield {
-                "b": b,
-                "c": c,
-                "v": v,
-                "t": t,
-            }
+            yield TextRow(
+                book=int(row["b"]),
+                chapter=int(row["c"]),
+                verse=int(row["v"]),
+                text=row["t"],
+            )
 
 
-def read_embeddings(path):
-    with path.open() as f:
-        for row in csv.DictReader(f):
-            b = int(row["b"])
-            c = int(row["c"])
-            v = int(row["v"])
-            e = model.encode(row["t"])
-            yield {
-                "b": b,
-                "c": c,
-                "v": v,
-                "e": e,
-            }
-
-
-def read_books(path):
+def _parse_books(path):
     with path.open() as f:
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-            yield {
-                "b": int(row[0]),
-                "n": row[1],
-            }
+            yield BooksRow(
+                book=int(row[0]),
+                name=row[1],
+            )
+
+
+def read_text(path):
+    for row in _parse_text(path):
+        yield {
+            "b": row.book,
+            "c": row.chapter,
+            "v": row.verse,
+            "t": row.text,
+        }
+
+
+def read_embeddings(path):
+    for row in _parse_text(path):
+        yield {
+            "b": row.book,
+            "c": row.chapter,
+            "v": row.verse,
+            "e": model.encode(row.text),
+        }
+
+
+def read_books(path):
+    for row in _parse_books(path):
+        yield {
+            "b": row.book,
+            "n": row.name,
+        }
 
 
 def write_parquet(path, data):
@@ -55,21 +79,21 @@ def write_parquet(path, data):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--text", required=True, type=Path)
-    parser.add_argument("--books", required=True, type=Path)
-    parser.add_argument("--dir", required=True, type=Path)
+    parser.add_argument("--text-in", required=True, type=Path)
+    parser.add_argument("--books-in", required=True, type=Path)
+    parser.add_argument("--text-out", required=True, type=Path)
+    parser.add_argument("--books-out", required=True, type=Path)
+    parser.add_argument("--embeddings-out", required=True, type=Path)
     args = parser.parse_args()
 
-    args.dir.mkdir(parents=True, exist_ok=True)
+    print(f"Writing {args.books_out}")
+    write_parquet(args.books_out, read_books(args.books_in))
 
-    print("Writing books.parquet")
-    write_parquet(args.dir / "books.parquet", read_books(args.books))
+    print(f"Writing {args.text_out}")
+    write_parquet(args.text_out, read_text(args.text_in))
 
-    print("Writing text.parquet")
-    write_parquet(args.dir / "text.parquet", read_text(args.text))
-
-    print("Writing embeddings.parquet")
-    write_parquet(args.dir / "embeddings.parquet", read_embeddings(args.text))
+    print(f"Writing {args.embeddings_out}")
+    write_parquet(args.embeddings_out, read_embeddings(args.text_in))
 
 
 if __name__ == "__main__":

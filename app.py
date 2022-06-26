@@ -11,20 +11,34 @@ st.title("Bible Search")
 
 query = st.text_input("Query", placeholder="What is love?")
 
+WEB_NAME = "World English Bible (WEB)"
+KJV_NAME = "King James Version (KJV)"
+YLT_NAME = "Young's Literal Translation (YLT)"
 
-st.radio("Version", ["World English Bible (WEB)"])
+VERSIONS = {
+    WEB_NAME: "web",
+    KJV_NAME: "kjv",
+    YLT_NAME: "ylt",
+}
+
+version = VERSIONS[
+    st.radio(
+        "Version",
+        VERSIONS.keys(),
+    )
+]
 
 
 @st.cache
-def _get_dfs():
+def _get_dfs(version):
     books_df = read_books_df(
-        "https://github.com/hoffa/bible/releases/download/v1/web_books.parquet"
+        f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_books.parquet"
     )
     text_df = read_text_df(
-        "https://github.com/hoffa/bible/releases/download/v1/web_text.parquet"
+        f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_text.parquet"
     )
     embeddings_df = read_embeddings_df(
-        "https://github.com/hoffa/bible/releases/download/v1/web_embeddings.parquet"
+        f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_embeddings.parquet"
     )
     return books_df, text_df, embeddings_df
 
@@ -44,7 +58,7 @@ def get_verse_url(result):
 
 if query:
     model = _get_model()
-    books_df, text_df, embeddings_df = _get_dfs()
+    books_df, text_df, embeddings_df = _get_dfs(version)
     results = search(books_df, text_df, embeddings_df, model.encode(query))
     out = ""
     for result in results:

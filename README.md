@@ -27,7 +27,5 @@ python encode.py --text t_web.csv --books key_english.csv --dir web
 ## Building the data
 
 ```bash
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_web.csv
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/key_english.csv
-python encode_scrollmapper.py --text t_web.csv --books key_english.csv --dir web
+./generate_data.sh
 ```
