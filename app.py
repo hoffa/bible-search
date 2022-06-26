@@ -57,9 +57,10 @@ def get_verse_url(result):
 
 
 if query:
-    model = _get_model()
-    books_df, text_df, embeddings_df = _get_dfs(version)
-    results = search(books_df, text_df, embeddings_df, model.encode(query))
+    with st.spinner("Loading..."):
+        model = _get_model()
+        books_df, text_df, embeddings_df = _get_dfs(version)
+        results = search(books_df, text_df, embeddings_df, model.encode(query))
     out = ""
     for result in results:
         out += f"1. [{result.book} {result.chapter}:{result.verse}]({get_verse_url(result)}) - {result.text}\n"
