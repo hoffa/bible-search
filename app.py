@@ -9,7 +9,7 @@ st.set_page_config(page_title="Bible Search", page_icon=":books:")
 st.title("Bible Search")
 
 
-query = st.text_input("Query", placeholder="What is love?")
+query = st.text_input("Search", placeholder="What is love?")
 
 WEB_NAME = "World English Bible (WEB)"
 KJV_NAME = "King James Version (KJV)"
