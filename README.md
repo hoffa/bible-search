@@ -1,5 +1,7 @@
 # bible
 
+[![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
+
 Bible data from https://github.com/scrollmapper/bible_databases
 
 - `encode.py` encodes the data to vectors
