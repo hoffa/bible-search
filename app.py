@@ -68,7 +68,7 @@ if query:
     model = _get_model()
     books_df, text_df, embeddings_df = _get_dfs(version)
     embeddings_df = embeddings_df.copy()  # want to modify without impacting cache
-    results_df = get_results_df(embeddings_df, model.encode(query), 100)
+    results_df = get_results_df(embeddings_df, model.encode(query), 50)
     results = search(books_df, text_df, results_df)
     st.subheader("Results")
     for result in results:
