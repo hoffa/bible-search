@@ -34,17 +34,15 @@ class SearchResult:
     text: str
 
 
-def _search(embeddings_df, query_embedding, results):
-    return embeddings_df.sort_values(
-        by="e",
-        ascending=False,
-        key=lambda col: col.map(lambda e: util.cos_sim(query_embedding, e)),
-    ).head(results)[["b", "c", "v"]]
+def get_results_df(embeddings_df, query_embedding, results=100):
+    embeddings_df["s"] = embeddings_df["e"].apply(
+        lambda e: float(util.cos_sim(e, query_embedding))
+    )
+    return embeddings_df.nlargest(results, "s")[["b", "c", "v", "s"]]
 
 
-def search(books_df, text_df, embeddings_df, query_embedding, results=100):
-    results = _search(embeddings_df, query_embedding, results).to_dict(orient="records")
-    for result in results:
+def search(books_df, text_df, results_df):
+    for result in results_df.to_dict(orient="records"):
         b = result["b"]
         c = result["c"]
         v = result["v"]

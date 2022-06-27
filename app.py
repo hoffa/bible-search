@@ -3,7 +3,14 @@ from pathlib import Path
 
 import streamlit as st
 
-from search import search, get_model, read_books_df, read_text_df, read_embeddings_df
+from search import (
+    search,
+    get_model,
+    read_books_df,
+    read_text_df,
+    read_embeddings_df,
+    get_results_df,
+)
 
 st.set_page_config(page_title="Bible Search", page_icon=":books:")
 st.title("Bible Search")
@@ -60,7 +67,9 @@ if query:
     with st.spinner("Loading..."):
         model = _get_model()
         books_df, text_df, embeddings_df = _get_dfs(version)
-        results = search(books_df, text_df, embeddings_df, model.encode(query))
+        embeddings_df = embeddings_df.copy()  # want to modify without impacting cache
+        results_df = get_results_df(embeddings_df, model.encode(query))
+        results = search(books_df, text_df, results_df)
     out = ""
     for result in results:
         out += f"1. [{result.book} {result.chapter}:{result.verse}]({get_verse_url(result)}) - {result.text}\n"
