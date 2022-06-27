@@ -13,13 +13,13 @@ def get_model():
 def read_books_df(path):
     df = pandas.read_parquet(path)
     df.set_index("b", inplace=True)
-    return df
+    return df.to_dict(orient="index")
 
 
 def read_text_df(path):
     df = pandas.read_parquet(path)
     df.set_index(["b", "c", "v"], inplace=True)
-    return df
+    return df.to_dict(orient="index")
 
 
 def read_embeddings_df(path):
@@ -48,8 +48,8 @@ def search(books_df, text_df, embeddings_df, query_embedding, results=100):
         b = result["b"]
         c = result["c"]
         v = result["v"]
-        book = books_df.loc[b]["n"]
-        text = text_df.loc[(b, c, v)]["t"]
+        book = books_df[b]["n"]
+        text = text_df[(b, c, v)]["t"]
         yield SearchResult(
             book=book,
             chapter=c,
