@@ -55,10 +55,11 @@ def _get_model():
     return get_model()
 
 
-def get_verse_url(result):
+def get_verse_url(result, version):
     return "https://www.biblegateway.com/passage/?" + urllib.parse.urlencode(
         {
             "search": f"{result.book} {result.chapter}",
+            "version": version.upper(),
         },
     )
 
@@ -75,5 +76,5 @@ if query:
             f"{result.book} {result.chapter}:{result.verse}", expanded=True
         ):
             st.write(
-                f"{result.text}\n\n[Read {result.book} {result.chapter}]({get_verse_url(result)})"
+                f"{result.text}\n\n[Read {result.book} {result.chapter}]({get_verse_url(result, version)})"
             )
