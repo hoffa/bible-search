@@ -36,7 +36,7 @@ class SearchResult:
     text: str
 
 
-def get_results_df(embeddings_df, query_embedding, results=100):
+def get_results_df(embeddings_df, query_embedding, results):
     embeddings_df["s"] = embeddings_df["e"].apply(
         lambda e: float(util.cos_sim(e, query_embedding))
     )

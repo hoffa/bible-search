@@ -58,20 +58,22 @@ def _get_model():
 def get_verse_url(result):
     return "https://www.biblegateway.com/passage/?" + urllib.parse.urlencode(
         {
-            "search": f"{result.book} {result.chapter}:{result.verse}",
+            "search": f"{result.book} {result.chapter}",
         },
     )
 
 
 if query:
-    with st.spinner("Loading..."):
-        model = _get_model()
-        books_df, text_df, embeddings_df = _get_dfs(version)
-        embeddings_df = embeddings_df.copy()  # want to modify without impacting cache
-        results_df = get_results_df(embeddings_df, model.encode(query))
-        results = search(books_df, text_df, results_df)
-    out = ""
-    for result in results:
-        out += f"1. [{result.book} {result.chapter}:{result.verse}]({get_verse_url(result)}) - {result.text}\n"
+    model = _get_model()
+    books_df, text_df, embeddings_df = _get_dfs(version)
+    embeddings_df = embeddings_df.copy()  # want to modify without impacting cache
+    results_df = get_results_df(embeddings_df, model.encode(query), 100)
+    results = search(books_df, text_df, results_df)
     st.subheader("Results")
-    st.write(out)
+    for result in results:
+        with st.expander(
+            f"{result.book} {result.chapter}:{result.verse}", expanded=True
+        ):
+            st.write(
+                f"{result.text}\n\n[Read {result.book} {result.chapter}]({get_verse_url(result)})"
+            )
