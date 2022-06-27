@@ -6,6 +6,8 @@ from pathlib import Path
 import pandas
 from sentence_transformers import SentenceTransformer
 
+from common import to_vid
+
 model = SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
@@ -47,20 +49,18 @@ def _parse_books(path):
 
 def read_text(path):
     for row in _parse_text(path):
+        vid = to_vid(row.book, row.chapter, row.verse)
         yield {
-            "b": row.book,
-            "c": row.chapter,
-            "v": row.verse,
+            "vid": vid,
             "t": row.text,
         }
 
 
 def read_embeddings(path):
     for row in _parse_text(path):
+        vid = to_vid(row.book, row.chapter, row.verse)
         yield {
-            "b": row.book,
-            "c": row.chapter,
-            "v": row.verse,
+            "vid": vid,
             "e": model.encode(row.text),
         }
 

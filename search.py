@@ -5,6 +5,8 @@ from dataclasses import dataclass
 import pandas
 from sentence_transformers import SentenceTransformer, util
 
+from common import from_vid
+
 
 def get_model():
     return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
@@ -18,7 +20,7 @@ def read_books_df(path):
 
 def read_text_df(path):
     df = pandas.read_parquet(path)
-    df.set_index(["b", "c", "v"], inplace=True)
+    df.set_index(["vid"], inplace=True)
     return df.to_dict(orient="index")
 
 
@@ -38,16 +40,15 @@ def get_results_df(embeddings_df, query_embedding, results=100):
     embeddings_df["s"] = embeddings_df["e"].apply(
         lambda e: float(util.cos_sim(e, query_embedding))
     )
-    return embeddings_df.nlargest(results, "s")[["b", "c", "v", "s"]]
+    return embeddings_df.nlargest(results, "s")[["vid", "s"]]
 
 
 def search(books_df, text_df, results_df):
     for result in results_df.to_dict(orient="records"):
-        b = result["b"]
-        c = result["c"]
-        v = result["v"]
+        vid = result["vid"]
+        b, c, v = from_vid(vid)
         book = books_df[b]["n"]
-        text = text_df[(b, c, v)]["t"]
+        text = text_df[vid]["t"]
         yield SearchResult(
             book=book,
             chapter=c,
