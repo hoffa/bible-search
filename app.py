@@ -39,7 +39,7 @@ version = VERSIONS[
 
 
 @st.cache
-def _get_dfs(version):
+def get_bible(version):
     books_df = read_books_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_books.parquet"
     )
@@ -53,7 +53,7 @@ def _get_dfs(version):
 
 
 @st.cache(allow_output_mutation=True)
-def _get_model():
+def get_transformer():
     return get_model()
 
 
@@ -69,10 +69,11 @@ def get_verse_url(result, version):
 
 
 if query:
-    model = _get_model()
-    books_df, text_df, embeddings_df = _get_dfs(version)
+    model = get_transformer()
+    books_df, text_df, embeddings_df = get_bible(version)
     embeddings_df = embeddings_df.copy()  # want to modify without impacting cache
     results_df = get_results_df(embeddings_df, model.encode(query), 50)
+    # TODO: Use https://www.sbert.net/examples/applications/semantic-search/README.html#util-semantic-search instead?
     results = search(books_df, text_df, results_df)
     st.subheader("Results")
     for result in results:
@@ -82,3 +83,7 @@ if query:
             st.write(
                 f"{result.text}\n\n[Read {result.book} {result.chapter}]({get_verse_url(result, version)})"
             )
+
+st.caption(
+    "This app allows you to search the Bible semantically. The source code is available [here](https://github.com/hoffa/bible-search)."
+)

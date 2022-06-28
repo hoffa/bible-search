@@ -4,6 +4,8 @@
 
 Semantically search the Bible.
 
+Originally based on a similar idea by [Chris Lee](https://github.com/chrislee973/bible-semantic-search).
+
 ## Data format
 
 Bible data is stored in 3 Parquet files:
