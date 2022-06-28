@@ -22,10 +22,10 @@ Where:
 - `t` is the verse text.
 - `e` is the verse embedding.
 
-See [releases](https://github.com/hoffa/bible-search/releases) for the latest data.
-
 ## Generating the data
 
 ```bash
 ./generate_data.sh
 ```
+
+The latest is uploaded to [releases](https://github.com/hoffa/bible-search/releases).
