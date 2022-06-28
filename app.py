@@ -68,6 +68,7 @@ def get_verse_url(result, version):
 
 
 if query:
+    print(version, query)
     model = get_transformer()
     books_df, text_df, embeddings_df, embeddings_tensor = get_bible(version)
     results_df = get_results_df(
