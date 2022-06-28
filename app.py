@@ -1,5 +1,4 @@
 import urllib
-from pathlib import Path
 
 import streamlit as st
 
@@ -46,10 +45,10 @@ def get_bible(version):
     text_df = read_text_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_text.parquet"
     )
-    embeddings_df = read_embeddings_df(
+    embeddings_df, embeddings_tensor = read_embeddings_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_embeddings.parquet"
     )
-    return books_df, text_df, embeddings_df
+    return books_df, text_df, embeddings_df, embeddings_tensor
 
 
 @st.cache(allow_output_mutation=True)
@@ -70,10 +69,10 @@ def get_verse_url(result, version):
 
 if query:
     model = get_transformer()
-    books_df, text_df, embeddings_df = get_bible(version)
-    embeddings_df = embeddings_df.copy()  # want to modify without impacting cache
-    results_df = get_results_df(embeddings_df, model.encode(query), 50)
-    # TODO: Use https://www.sbert.net/examples/applications/semantic-search/README.html#util-semantic-search instead?
+    books_df, text_df, embeddings_df, embeddings_tensor = get_bible(version)
+    results_df = get_results_df(
+        embeddings_df, model.encode(query), 50, embeddings_tensor
+    )
     results = search(books_df, text_df, results_df)
     st.subheader("Results")
     for result in results:

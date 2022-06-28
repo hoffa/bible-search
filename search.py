@@ -3,6 +3,7 @@ from pathlib import Path
 from dataclasses import dataclass
 
 import pandas
+import torch
 from sentence_transformers import SentenceTransformer, util
 
 from common import from_vid
@@ -25,7 +26,9 @@ def read_text_df(path):
 
 
 def read_embeddings_df(path):
-    return pandas.read_parquet(path)
+    df = pandas.read_parquet(path)
+    tensor = torch.tensor(df["e"])
+    return df, tensor
 
 
 @dataclass
@@ -36,16 +39,14 @@ class SearchResult:
     text: str
 
 
-def get_results_df(embeddings_df, query_embedding, results):
-    embeddings_df["s"] = embeddings_df["e"].apply(
-        lambda e: float(util.cos_sim(e, query_embedding))
-    )
-    return embeddings_df.nlargest(results, "s")[["vid", "s"]]
+def get_results_df(embeddings_df, query_embedding, results, embeddings_tensor):
+    results = util.semantic_search(query_embedding, embeddings_tensor, top_k=results)
+    for result in results[0]:
+        yield embeddings_df.iloc[result["corpus_id"]]["vid"]
 
 
 def search(books_df, text_df, results_df):
-    for result in results_df.to_dict(orient="records"):
-        vid = result["vid"]
+    for vid in results_df:
         b, c, v = from_vid(vid)
         book = books_df[b]["n"]
         text = text_df[vid]["t"]
