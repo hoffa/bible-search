@@ -28,4 +28,4 @@ Where:
 ./generate_data.sh
 ```
 
-The latest is uploaded to [releases](https://github.com/hoffa/bible-search/releases).
+The latest data is uploaded to [releases](https://github.com/hoffa/bible-search/releases).
