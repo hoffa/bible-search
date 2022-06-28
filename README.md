@@ -14,6 +14,8 @@ Bible data is stored in 3 Parquet files:
 2. Verse embeddings with columns `vid` and `e`.
 3. Book number-to-name mapping with columns `b` and `n`.
 
+Requires Python 3.10+.
+
 Where:
 
 - `vid` is the verse ID. It's an integer in the format `bbbcccvvv` where `bbb` is the book number, `ccc` is the chapter number, and `vvv` is the verse number. For example `012003042` corresponds to the 12th book, 3rd chapter, and 42nd verse.
