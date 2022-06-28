@@ -6,6 +6,21 @@ Semantically search the Bible.
 
 Originally based on a similar idea by [Chris Lee](https://github.com/chrislee973/bible-semantic-search).
 
+## Try it
+
+[biblesear.ch](https://biblesear.ch)
+
+## Run locally
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+Requires Python 3.10+.
+
 ## Data format
 
 Bible data is stored in 3 Parquet files:
@@ -13,8 +28,6 @@ Bible data is stored in 3 Parquet files:
 1. The Bible text with columns `vid` and `t`.
 2. Verse embeddings with columns `vid` and `e`.
 3. Book number-to-name mapping with columns `b` and `n`.
-
-Requires Python 3.10+.
 
 Where:
 
