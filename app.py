@@ -21,11 +21,13 @@ query = st.text_input("Search", placeholder="What is love?")
 WEB_NAME = "World English Bible (WEB)"
 KJV_NAME = "King James Version (KJV)"
 YLT_NAME = "Young's Literal Translation (YLT)"
+BBE_NAME = "Bible in Basic English (BBE)"
 
 VERSIONS = {
     WEB_NAME: "web",
     KJV_NAME: "kjv",
     YLT_NAME: "ylt",
+    BBE_NAME: "bbe",
 }
 
 version = VERSIONS[
@@ -56,10 +58,12 @@ def _get_model():
 
 
 def get_verse_url(result, version):
+    # BBE isn't on BibleGateway
+    version = "niv" if version == "bbe" else version
     return "https://www.biblegateway.com/passage/?" + urllib.parse.urlencode(
         {
             "search": f"{result.book} {result.chapter}",
-            "version": version.upper(),
+            "version": version,
         },
     )
 
