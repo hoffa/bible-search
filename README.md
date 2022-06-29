@@ -8,8 +8,6 @@ Originally based on a similar idea by [Chris Lee](https://github.com/chrislee973
 
 Public domain Bible translations courtesy of [Scrollmapper](https://github.com/scrollmapper/bible_databases).
 
-Try it at [biblesear.ch](https://biblesear.ch).
-
 ## Data format
 
 Bible data is stored in 3 Parquet files:
