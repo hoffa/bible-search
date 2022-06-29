@@ -8,20 +8,7 @@ Originally based on a similar idea by [Chris Lee](https://github.com/chrislee973
 
 Public domain Bible translations courtesy of [Scrollmapper](https://github.com/scrollmapper/bible_databases).
 
-## Try it
-
-[biblesear.ch](https://biblesear.ch)
-
-## Run locally
-
-```bash
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-streamlit run app.py
-```
-
-Requires Python 3.10+.
+Try it at [biblesear.ch](https://biblesear.ch).
 
 ## Data format
 
@@ -39,10 +26,28 @@ Where:
 - `t` is the verse text.
 - `e` is the verse embedding.
 
+## Development
+
+### Quick start
+
+> Note: you'll need Python 3.10+.
+
+Set up dependencies:
+
+```bash
+make init
+```
+
+Run the app:
+
+```bash
+make run
+```
+
 ## Generating the data
 
 ```bash
-./generate_data.sh
+make data
 ```
 
 The latest data is uploaded to [releases](https://github.com/hoffa/bible-search/releases).
