@@ -14,7 +14,7 @@ curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/cs
 
 # $1 - translation key
 generate_scrollmapper() {
-    "${PYTHON}" ../encode_scrollmapper.py --text-in "t_$1.csv" --books-in key_english.csv --text-out "$1_text.parquet" --books-out "$1_books.parquet" --embeddings-out "$1_embeddings.parquet"
+	"${PYTHON}" ../encode.py --text-in "t_$1.csv" --books-in key_english.csv --text-out "$1_text.parquet" --books-out "$1_books.parquet" --embeddings-out "$1_embeddings.parquet"
 }
 
 generate_scrollmapper web

@@ -1,4 +1,4 @@
-pandas
-sentence-transformers
-streamlit
-torch
+sentence-transformers==2.*
+streamlit==1.*
+pandas==1.*
+torch==1.*
