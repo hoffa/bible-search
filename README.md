@@ -4,7 +4,7 @@
 
 Semantically search the Bible. Try it out [here](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
 
-Originally based on a similar idea by [Chris Lee](https://github.com/chrislee973/bible-semantic-search).
+Originally based on a [similar idea](https://github.com/chrislee973/bible-semantic-search) by Chris Lee.
 
 Public domain Bible translations courtesy of [Scrollmapper](https://github.com/scrollmapper/bible_databases).
 
