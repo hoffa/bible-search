@@ -1,0 +1,4 @@
+pandas
+sentence-transformers
+streamlit
+torch
