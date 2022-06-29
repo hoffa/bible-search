@@ -10,8 +10,6 @@ Public domain Bible translations courtesy of [Scrollmapper](https://github.com/s
 
 ## Development
 
-### Quick start
-
 Set up dependencies:
 
 ```bash
