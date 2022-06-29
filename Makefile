@@ -23,4 +23,4 @@ clean:
 	rm -rf $(VENV)
 
 data:
-	./generate_data.sh
+	./data.sh
