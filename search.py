@@ -2,9 +2,9 @@ import argparse
 from pathlib import Path
 from dataclasses import dataclass
 
-import pandas
+import pandas  # type: ignore
 import torch
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer, util  # type: ignore
 
 from common import from_vid
 

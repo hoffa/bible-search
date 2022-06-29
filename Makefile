@@ -1,16 +1,20 @@
 VENV = .venv
 BIN = $(VENV)/bin
 PYTHON = $(BIN)/python
-PROD = requirements/prod.txt
-DEV = requirements/dev.txt
 
 init:
 	python3 -m venv $(VENV)
 	$(PYTHON) -m pip install --upgrade pip setuptools wheel
-	$(PYTHON) -m pip install -r requirements.txt
+	$(PYTHON) -m pip install --upgrade -r requirements.txt
+	$(PYTHON) -m pip install --upgrade black pyflakes mypy
 
-dev:
-	$(PYTHON) -m pip install -r requirements/dev.txt
+format:
+	$(PYTHON) -m black .
+
+test:
+	$(PYTHON) -m black --check .
+	$(PYTHON) -m pyflakes *.py
+	$(PYTHON) -m mypy *.py
 
 run:
 	$(BIN)/streamlit run app.py
@@ -20,6 +24,3 @@ clean:
 
 data:
 	./generate_data.sh
-
-requirements: clean init
-	$(PYTHON) -m pip freeze > requirements.txt

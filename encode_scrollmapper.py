@@ -3,8 +3,8 @@ import csv
 from dataclasses import dataclass
 from pathlib import Path
 
-import pandas
-from sentence_transformers import SentenceTransformer
+import pandas  # type: ignore
+from sentence_transformers import SentenceTransformer  # type: ignore
 
 from common import to_vid
 
