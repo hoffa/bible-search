@@ -28,8 +28,6 @@ Where:
 
 ### Quick start
 
-> Note: you'll need Python 3.10+.
-
 Set up dependencies:
 
 ```bash
