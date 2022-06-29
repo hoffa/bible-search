@@ -3,7 +3,9 @@
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
 [![Tests](https://github.com/hoffa/bible-search/actions/workflows/test.yml/badge.svg)](https://github.com/hoffa/bible-search/actions/workflows/test.yml)
 
-Semantically search the Bible. Try it out [here](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com).
+Semantically search the Bible.
+
+Try it out [here](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com).
 
 ## Development
 
