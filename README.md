@@ -40,7 +40,7 @@ Bible data is stored in 3 Parquet files:
 
 Where:
 
-- `vid` is the verse ID. It's an integer in the format `bbbcccvvv` where `bbb` is the book number, `ccc` is the chapter number, and `vvv` is the verse number. For example `012003042` corresponds to the 12th book, 3rd chapter, and 42nd verse.
+- `vid` is the verse ID. It's an integer in the format `bbbcccvvv` where `bbb` is the book number, `ccc` is the chapter number, and `vvv` is the verse number.
 - `b` is the book number.
 - `n` is the book name.
 - `t` is the verse text.
