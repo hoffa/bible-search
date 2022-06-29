@@ -2,7 +2,7 @@
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
 
-Semantically search the Bible. Try it out [here](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
+Semantically search the Bible. Try it out [here](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com).
 
 Originally based on a [similar idea](https://github.com/chrislee973/bible-semantic-search) by Chris Lee.
 
