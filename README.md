@@ -1,4 +1,4 @@
-# bible-search
+# :books: bible-search
 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com)
 
