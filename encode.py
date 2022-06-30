@@ -5,12 +5,11 @@ from pathlib import Path
 from typing import Any, Iterator, TypedDict
 
 import pandas  # type: ignore
-from sentence_transformers import SentenceTransformer  # type: ignore
 import torch
 
-from common import to_vid
+from common import get_model, to_vid
 
-model = SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
+model = get_model()
 
 
 @dataclass

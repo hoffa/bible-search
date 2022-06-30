@@ -3,13 +3,9 @@ from typing import Iterable, Iterator
 
 import pandas  # type: ignore
 import torch
-from sentence_transformers import SentenceTransformer, util  # type: ignore
+from sentence_transformers import util  # type: ignore
 
 from common import from_vid
-
-
-def get_model() -> SentenceTransformer:
-    return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
 def read_books_df(path: str) -> dict[int, str]:

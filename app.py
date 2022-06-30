@@ -4,11 +4,11 @@ import pandas  # type: ignore
 import streamlit as st
 import torch
 from sentence_transformers import SentenceTransformer  # type: ignore
+from common import get_model
 
 from search import (
     SearchResult,
     search,
-    get_model,
     read_books_df,
     read_text_df,
     read_embeddings_df,
