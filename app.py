@@ -38,7 +38,7 @@ version = VERSIONS[
 ]
 
 
-@st.cache
+@st.cache(show_spinner=False)
 def get_bible(version: str):
     books_df = read_books_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_books.parquet"
@@ -52,7 +52,7 @@ def get_bible(version: str):
     return books_df, text_df, embeddings_df, embeddings_tensor
 
 
-@st.cache(allow_output_mutation=True)
+@st.cache(allow_output_mutation=True, show_spinner=False)
 def get_transformer():
     return get_model()
 
@@ -69,12 +69,13 @@ def get_verse_url(result: SearchResult, version: str) -> str:
 
 
 if query:
-    model = get_transformer()
-    books_df, text_df, embeddings_df, embeddings_tensor = get_bible(version)
-    results_df = get_results_df(
-        embeddings_df, model.encode(query), 50, embeddings_tensor
-    )
-    results = search(books_df, text_df, results_df)
+    with st.spinner("Loading..."):
+        model = get_transformer()
+        books_df, text_df, embeddings_df, embeddings_tensor = get_bible(version)
+        results_df = get_results_df(
+            embeddings_df, model.encode(query), 50, embeddings_tensor
+        )
+        results = search(books_df, text_df, results_df)
     st.subheader("Results")
     for result in results:
         with st.expander(
