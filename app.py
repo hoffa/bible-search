@@ -3,6 +3,7 @@ import pandas  # type: ignore
 
 import streamlit as st
 import torch
+from sentence_transformers import SentenceTransformer  # type: ignore
 
 from search import (
     SearchResult,
@@ -40,7 +41,7 @@ version = VERSIONS[
 ]
 
 
-@st.cache(show_spinner=False)
+@st.cache(show_spinner=False)  # type: ignore
 def get_bible(
     version: str,
 ) -> tuple[dict[int, str], dict[int, str], pandas.DataFrame, torch.Tensor]:
@@ -56,8 +57,8 @@ def get_bible(
     return books_df, text_df, embeddings_df, embeddings_tensor
 
 
-@st.cache(allow_output_mutation=True, show_spinner=False)
-def get_transformer():
+@st.cache(allow_output_mutation=True, show_spinner=False)  # type: ignore
+def get_transformer() -> SentenceTransformer:
     return get_model()
 
 

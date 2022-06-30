@@ -14,7 +14,7 @@ format:
 test:
 	$(PYTHON) -m black --check .
 	$(PYTHON) -m pyflakes *.py
-	$(PYTHON) -m mypy *.py
+	$(PYTHON) -m mypy --strict *.py
 
 run:
 	$(BIN)/streamlit run app.py
