@@ -1,6 +1,8 @@
 import urllib
+import pandas  # type: ignore
 
 import streamlit as st
+import torch
 
 from search import (
     SearchResult,
@@ -39,7 +41,9 @@ version = VERSIONS[
 
 
 @st.cache(show_spinner=False)
-def get_bible(version: str):
+def get_bible(
+    version: str,
+) -> tuple[dict[int, str], dict[int, str], pandas.DataFrame, torch.Tensor]:
     books_df = read_books_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_books.parquet"
     )

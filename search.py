@@ -16,16 +16,16 @@ def get_model() -> SentenceTransformer:
     return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
-def read_books_df(path: Pathish) -> dict:
+def read_books_df(path: Pathish) -> dict[int, str]:
     df = pandas.read_parquet(path)
     df.set_index("b", inplace=True)
-    return df.to_dict(orient="index")
+    return {k: v["n"] for k, v in df.to_dict(orient="index").items()}
 
 
-def read_text_df(path: Pathish) -> dict:
+def read_text_df(path: Pathish) -> dict[int, str]:
     df = pandas.read_parquet(path)
     df.set_index(["vid"], inplace=True)
-    return df.to_dict(orient="index")
+    return {k: v["t"] for k, v in df.to_dict(orient="index").items()}
 
 
 def read_embeddings_df(path: Pathish) -> tuple[pandas.DataFrame, torch.Tensor]:
@@ -56,8 +56,8 @@ def get_results_df(
 def search(books_df: dict, text_df: dict, results_df) -> Iterator[SearchResult]:
     for vid in results_df:
         b, c, v = from_vid(vid)
-        book = books_df[b]["n"]
-        text = text_df[vid]["t"]
+        book = books_df[b]
+        text = text_df[vid]
         yield SearchResult(
             book=book,
             chapter=c,
