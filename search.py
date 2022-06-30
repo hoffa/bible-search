@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 from dataclasses import dataclass
+from typing import Iterator, Union
 
 import pandas  # type: ignore
 import torch
@@ -8,24 +9,26 @@ from sentence_transformers import SentenceTransformer, util  # type: ignore
 
 from common import from_vid
 
+Pathish = Union[Path, str]
 
-def get_model():
+
+def get_model() -> SentenceTransformer:
     return SentenceTransformer("multi-qa-MiniLM-L6-cos-v1")
 
 
-def read_books_df(path):
+def read_books_df(path: Pathish) -> dict:
     df = pandas.read_parquet(path)
     df.set_index("b", inplace=True)
     return df.to_dict(orient="index")
 
 
-def read_text_df(path):
+def read_text_df(path: Pathish) -> dict:
     df = pandas.read_parquet(path)
     df.set_index(["vid"], inplace=True)
     return df.to_dict(orient="index")
 
 
-def read_embeddings_df(path):
+def read_embeddings_df(path: Pathish) -> tuple[pandas.DataFrame, torch.Tensor]:
     df = pandas.read_parquet(path)
     tensor = torch.tensor(df["e"])
     return df, tensor
@@ -39,13 +42,18 @@ class SearchResult:
     text: str
 
 
-def get_results_df(embeddings_df, query_embedding, results, embeddings_tensor):
-    results = util.semantic_search(query_embedding, embeddings_tensor, top_k=results)
+def get_results_df(
+    embeddings_df: pandas.DataFrame,
+    query_embedding: torch.Tensor,
+    top_k: int,
+    embeddings_tensor: torch.Tensor,
+) -> Iterator[int]:
+    results = util.semantic_search(query_embedding, embeddings_tensor, top_k=top_k)
     for result in results[0]:
         yield embeddings_df.iloc[result["corpus_id"]]["vid"]
 
 
-def search(books_df, text_df, results_df):
+def search(books_df: dict, text_df: dict, results_df) -> Iterator[SearchResult]:
     for vid in results_df:
         b, c, v = from_vid(vid)
         book = books_df[b]["n"]

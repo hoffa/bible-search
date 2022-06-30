@@ -3,6 +3,7 @@ import urllib
 import streamlit as st
 
 from search import (
+    SearchResult,
     search,
     get_model,
     read_books_df,
@@ -38,7 +39,7 @@ version = VERSIONS[
 
 
 @st.cache
-def get_bible(version):
+def get_bible(version: str):
     books_df = read_books_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_books.parquet"
     )
@@ -56,7 +57,7 @@ def get_transformer():
     return get_model()
 
 
-def get_verse_url(result, version):
+def get_verse_url(result: SearchResult, version: str) -> str:
     # BBE isn't on BibleGateway
     version = "niv" if version == "bbe" else version
     return "https://www.biblegateway.com/passage/?" + urllib.parse.urlencode(
