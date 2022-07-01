@@ -14,10 +14,8 @@ model = get_model()
 
 @dataclass
 class TextRow:
-    book: int
-    chapter: int
-    verse: int
     text: str
+    vid: int
 
 
 @dataclass
@@ -44,11 +42,13 @@ class EmbeddingsDfRow(TypedDict):
 def _parse_text(path: Path) -> Iterator[TextRow]:
     with path.open() as f:
         for row in csv.DictReader(f):
+            b = int(row["b"])
+            c = int(row["c"])
+            v = int(row["v"])
+            vid = to_vid(b, c, v)
             yield TextRow(
-                book=int(row["b"]),
-                chapter=int(row["c"]),
-                verse=int(row["v"]),
                 text=row["t"],
+                vid=vid,
             )
 
 
@@ -65,18 +65,16 @@ def _parse_books(path: Path) -> Iterator[BooksRow]:
 
 def read_text(path: Path) -> Iterator[TextDfRow]:
     for row in _parse_text(path):
-        vid = to_vid(row.book, row.chapter, row.verse)
         yield {
-            "vid": vid,
+            "vid": row.vid,
             "t": row.text,
         }
 
 
 def read_embeddings(path: Path) -> Iterator[EmbeddingsDfRow]:
     for row in _parse_text(path):
-        vid = to_vid(row.book, row.chapter, row.verse)
         yield {
-            "vid": vid,
+            "vid": row.vid,
             "e": model.encode(row.text),
         }
 

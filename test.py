@@ -1,5 +1,7 @@
+from pathlib import Path
 import unittest
-from common import get_model
+from common import from_vid, get_model, to_vid
+from encode import read_books, read_embeddings, read_text
 
 from search import (
     get_results_df,
@@ -26,3 +28,28 @@ class Test(unittest.TestCase):
             results[4].text,
             "Love is patient and is kind; love doesn't envy. Love doesn't brag, is not proud,",
         )
+
+    def test_encode(self) -> None:
+        self.assertEqual(
+            list(read_text(Path("dist/t_web.csv")))[42],
+            {
+                "vid": 1002012,
+                "t": "and the gold of that land is good. There is aromatic resin and the onyx stone.",
+            },
+        )
+        self.assertEqual(
+            list(read_books(Path("dist/key_english.csv")))[10],
+            {"b": 11, "n": "1 Kings"},
+        )
+        embedding = next(read_embeddings(Path("dist/t_web.csv")))
+        self.assertEqual(embedding["vid"], 1001001)
+
+    def test_vid(self) -> None:
+        self.assertEqual(to_vid(999, 999, 999), 999_999_999)
+        self.assertEqual(to_vid(1, 23, 456), 1_023_456)
+        self.assertEqual(to_vid(1, 23), 1_023_000)
+        self.assertEqual(to_vid(12), 12_000_000)
+        self.assertEqual(from_vid(999_999_999), (999, 999, 999))
+        self.assertEqual(from_vid(1_023_456), (1, 23, 456))
+        self.assertEqual(from_vid(1_023_000), (1, 23, 0))
+        self.assertEqual(from_vid(12_000_000), (12, 0, 0))

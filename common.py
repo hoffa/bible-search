@@ -1,7 +1,7 @@
 from sentence_transformers import SentenceTransformer  # type: ignore
 
 
-def to_vid(b: int, c: int, v: int) -> int:
+def to_vid(b: int, c: int = 0, v: int = 0) -> int:
     return (b * 1000000) + (c * 1000) + v
 
 
