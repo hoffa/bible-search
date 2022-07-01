@@ -12,6 +12,7 @@ format:
 	$(PYTHON) -m black .
 
 test:
+	$(PYTHON) -m unittest test.py
 	$(PYTHON) -m black --check .
 	$(PYTHON) -m pyflakes *.py
 	$(PYTHON) -m mypy --strict *.py
