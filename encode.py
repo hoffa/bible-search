@@ -16,12 +16,9 @@ model = get_model()
 class TextRow:
     text: str
     vid: int
-
-
-@dataclass
-class BooksRow:
     book: int
-    name: str
+    chapter: int
+    verse: int
 
 
 class TextDfRow(TypedDict):
@@ -49,42 +46,39 @@ def _parse_text(path: Path) -> Iterator[TextRow]:
             yield TextRow(
                 text=row["t"],
                 vid=vid,
-            )
-
-
-def _parse_books(path: Path) -> Iterator[BooksRow]:
-    with path.open() as f:
-        reader = csv.reader(f)
-        next(reader)
-        for row in reader:
-            yield BooksRow(
-                book=int(row[0]),
-                name=row[1],
+                book=b,
+                chapter=c,
+                verse=v,
             )
 
 
 def read_text(path: Path) -> Iterator[TextDfRow]:
     for row in _parse_text(path):
-        yield {
-            "vid": row.vid,
-            "t": row.text,
-        }
+        yield TextDfRow(
+            vid=row.vid,
+            t=row.text,
+        )
 
 
 def read_embeddings(path: Path) -> Iterator[EmbeddingsDfRow]:
     for row in _parse_text(path):
-        yield {
-            "vid": row.vid,
-            "e": model.encode(row.text),
-        }
+        yield EmbeddingsDfRow(
+            vid=row.vid,
+            e=model.encode(row.text),
+        )
 
 
 def read_books(path: Path) -> Iterator[BooksDfRow]:
-    for row in _parse_books(path):
-        yield {
-            "b": row.book,
-            "n": row.name,
-        }
+    with path.open() as f:
+        reader = csv.reader(f)
+        next(reader)
+        for row in reader:
+            b = int(row[0])
+            n = row[1]
+            yield BooksDfRow(
+                b=b,
+                n=n,
+            )
 
 
 def write_parquet(path: Path, data: Any) -> None:
