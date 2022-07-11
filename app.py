@@ -91,5 +91,5 @@ if query:
             )
 
 st.caption(
-    "This app allows you to search the Bible semantically. The source code is available [here](https://github.com/hoffa/bible-search)."
+    "This app allows you to search the Bible [semantically](https://en.wikipedia.org/wiki/Semantic_search). The source code is available [here](https://github.com/hoffa/bible-search)."
 )
