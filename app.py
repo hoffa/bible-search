@@ -35,7 +35,7 @@ VERSIONS = {
 
 version = VERSIONS[
     st.radio(
-        "Version",
+        "Translation",
         VERSIONS.keys(),
     )
 ]
