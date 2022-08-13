@@ -24,7 +24,12 @@ class Test(unittest.TestCase):
                 "https://github.com/hoffa/bible-search/releases/download/v1/web_books.parquet",
             )
         )
-        text = read_text_df("dist/web_text.parquet")
+        text = read_text_df(
+            path_or_url(
+                "dist/web_text.parquet",
+                "https://github.com/hoffa/bible-search/releases/download/v1/web_text.parquet",
+            )
+        )
         embeddings, embeddings_tensor = read_embeddings_df(
             path_or_url(
                 "dist/web_embeddings.parquet",
@@ -71,7 +76,16 @@ class Test(unittest.TestCase):
             )[10],
             {"b": 11, "n": "1 Kings"},
         )
-        embedding = next(read_embeddings(Path("dist/t_web.csv")))
+        embedding = next(
+            read_embeddings(
+                Path(
+                    path_or_url(
+                        "dist/t_web.csv",
+                        "https://github.com/scrollmapper/bible_databases/blob/master/csv/t_web.csv",
+                    )
+                )
+            )
+        )
         self.assertEqual(embedding["vid"], 1001001)
 
     def test_vid(self) -> None:
