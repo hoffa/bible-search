@@ -21,6 +21,12 @@ Run the app:
 make run
 ```
 
+Run tests:
+
+```bash
+make test
+```
+
 ## Generating the data
 
 ```bash
