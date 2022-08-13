@@ -48,44 +48,17 @@ class Test(unittest.TestCase):
 
     def test_encode(self) -> None:
         self.assertEqual(
-            list(
-                read_text(
-                    Path(
-                        path_or_url(
-                            "dist/t_web.csv",
-                            "https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_web.csv",
-                        )
-                    )
-                )
-            )[42],
+            list(read_text(Path("dist/t_web.csv")))[42],
             {
                 "vid": 1002012,
                 "t": "and the gold of that land is good. There is aromatic resin and the onyx stone.",
             },
         )
         self.assertEqual(
-            list(
-                read_books(
-                    Path(
-                        path_or_url(
-                            "dist/key_english.csv",
-                            "https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/key_english.csv",
-                        )
-                    )
-                )
-            )[10],
+            list(read_books(Path("dist/key_english.csv")))[10],
             {"b": 11, "n": "1 Kings"},
         )
-        embedding = next(
-            read_embeddings(
-                Path(
-                    path_or_url(
-                        "dist/t_web.csv",
-                        "https://github.com/scrollmapper/bible_databases/blob/master/csv/t_web.csv",
-                    )
-                )
-            )
-        )
+        embedding = next(read_embeddings(Path("dist/t_web.csv")))
         self.assertEqual(embedding["vid"], 1001001)
 
     def test_vid(self) -> None:

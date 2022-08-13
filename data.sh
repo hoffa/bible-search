@@ -3,14 +3,7 @@ set -eux
 
 PYTHON="${PWD}/.venv/bin/python"
 
-mkdir -p dist
 cd dist
-
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_web.csv
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_bbe.csv
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_kjv.csv
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_ylt.csv
-curl -O https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/key_english.csv
 
 # $1 - translation key
 generate_scrollmapper() {
