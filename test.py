@@ -12,12 +12,24 @@ from search import (
 )
 
 
+def path_or_url(path: str, url: str) -> str:
+    return path if Path(path).exists() else url
+
+
 class Test(unittest.TestCase):
     def test_search(self) -> None:
-        books = read_books_df("dist/web_books.parquet")
+        books = read_books_df(
+            path_or_url(
+                "dist/web_books.parquet",
+                "https://github.com/hoffa/bible-search/releases/download/v1/web_books.parquet",
+            )
+        )
         text = read_text_df("dist/web_text.parquet")
         embeddings, embeddings_tensor = read_embeddings_df(
-            "dist/web_embeddings.parquet"
+            path_or_url(
+                "dist/web_embeddings.parquet",
+                "https://github.com/hoffa/bible-search/releases/download/v1/web_embeddings.parquet",
+            )
         )
         model = get_model()
         vids = get_results_df(
@@ -31,14 +43,32 @@ class Test(unittest.TestCase):
 
     def test_encode(self) -> None:
         self.assertEqual(
-            list(read_text(Path("dist/t_web.csv")))[42],
+            list(
+                read_text(
+                    Path(
+                        path_or_url(
+                            "dist/t_web.csv",
+                            "https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/t_web.csv",
+                        )
+                    )
+                )
+            )[42],
             {
                 "vid": 1002012,
                 "t": "and the gold of that land is good. There is aromatic resin and the onyx stone.",
             },
         )
         self.assertEqual(
-            list(read_books(Path("dist/key_english.csv")))[10],
+            list(
+                read_books(
+                    Path(
+                        path_or_url(
+                            "dist/key_english.csv",
+                            "https://raw.githubusercontent.com/scrollmapper/bible_databases/master/csv/key_english.csv",
+                        )
+                    )
+                )
+            )[10],
             {"b": 11, "n": "1 Kings"},
         )
         embedding = next(read_embeddings(Path("dist/t_web.csv")))
