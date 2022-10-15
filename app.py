@@ -34,7 +34,7 @@ VERSIONS = {
 }
 
 name = st.radio("Translation", VERSIONS.keys())
-version = VERSIONS.get(name, WEB_NAME)
+version = VERSIONS.get(name) or WEB_NAME
 
 
 @st.cache(show_spinner=False)
