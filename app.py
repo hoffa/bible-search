@@ -33,12 +33,8 @@ VERSIONS = {
     BBE_NAME: "bbe",
 }
 
-version = VERSIONS[
-    st.radio(
-        "Translation",
-        VERSIONS.keys(),
-    )
-]
+name = st.radio("Translation", VERSIONS.keys())
+version = VERSIONS[name or WEB_NAME]
 
 
 @st.cache(show_spinner=False)
