@@ -74,7 +74,7 @@ if query:
         model = get_transformer()
         books_df, text_df, embeddings_df, embeddings_tensor = get_bible(version)
         results_df = get_results_df(
-            embeddings_df, model.encode(query), 50, embeddings_tensor
+            embeddings_df, model.encode(query), 100, embeddings_tensor
         )
         results = search(books_df, text_df, results_df)
     st.subheader("Results")
