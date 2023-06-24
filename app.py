@@ -21,10 +21,10 @@ st.title("Bible Search")
 
 query = st.text_input("Search", placeholder="What is love?")
 
-WEB_NAME = "World English Bible (WEB)"
-KJV_NAME = "King James Version (KJV)"
-YLT_NAME = "Young's Literal Translation (YLT)"
-BBE_NAME = "Bible in Basic English (BBE)"
+WEB_NAME = "World English Bible"
+KJV_NAME = "King James Version"
+YLT_NAME = "Young's Literal Translation"
+BBE_NAME = "Bible in Basic English"
 
 VERSIONS = {
     WEB_NAME: "web",
