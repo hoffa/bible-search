@@ -77,6 +77,7 @@ if query:
             embeddings_df, model.encode(query), 50, embeddings_tensor
         )
         results = search(books_df, text_df, results_df)
+    st.subheader("Results")
     for result in results:
         with st.expander(
             f"{result.book} {result.chapter}:{result.verse}", expanded=True
