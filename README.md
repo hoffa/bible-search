@@ -5,7 +5,7 @@
 
 Semantically search the Bible.
 
-Try it out [here](https://hoffa-bible-search-app-1uj1m3.streamlitapp.com).
+Try it out [here](https://bible-search.streamlit.app).
 
 ## Development
 
