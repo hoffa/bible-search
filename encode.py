@@ -2,9 +2,9 @@ import argparse
 import csv
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Iterator, TypedDict
+from typing import TypedDict
 
-import pandas  # type: ignore
+import pandas
 import torch
 
 from common import get_model, to_vid
@@ -36,7 +36,7 @@ class EmbeddingsDfRow(TypedDict):
     e: list[torch.Tensor]
 
 
-def _parse_text(path: Path) -> Iterator[TextRow]:
+def _parse_text(path):
     with path.open() as f:
         for row in csv.DictReader(f):
             b = int(row["b"])
@@ -52,7 +52,7 @@ def _parse_text(path: Path) -> Iterator[TextRow]:
             )
 
 
-def read_text(path: Path) -> Iterator[TextDfRow]:
+def read_text(path):
     for row in _parse_text(path):
         yield TextDfRow(
             vid=row.vid,
@@ -60,7 +60,7 @@ def read_text(path: Path) -> Iterator[TextDfRow]:
         )
 
 
-def read_embeddings(path: Path) -> Iterator[EmbeddingsDfRow]:
+def read_embeddings(path):
     for row in _parse_text(path):
         yield EmbeddingsDfRow(
             vid=row.vid,
@@ -68,7 +68,7 @@ def read_embeddings(path: Path) -> Iterator[EmbeddingsDfRow]:
         )
 
 
-def read_books(path: Path) -> Iterator[BooksDfRow]:
+def read_books(path):
     with path.open() as f:
         reader = csv.reader(f)
         next(reader)
@@ -81,11 +81,11 @@ def read_books(path: Path) -> Iterator[BooksDfRow]:
             )
 
 
-def write_parquet(path: Path, data: Any) -> None:
+def write_parquet(path, data):
     pandas.DataFrame(data=data).to_parquet(path, compression="gzip")
 
 
-def main() -> None:
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--text-in", required=True, type=Path)
     parser.add_argument("--books-in", required=True, type=Path)

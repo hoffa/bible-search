@@ -1,13 +1,9 @@
 import urllib
-import pandas  # type: ignore
 
 import streamlit as st
-import torch
-from sentence_transformers import SentenceTransformer  # type: ignore
 from common import get_model
 
 from search import (
-    SearchResult,
     search,
     read_books_df,
     read_text_df,
@@ -38,9 +34,7 @@ version = VERSIONS[name or WEB_NAME]
 
 
 @st.cache(show_spinner=False)
-def get_bible(
-    version: str,
-) -> tuple[dict[int, str], dict[int, str], pandas.DataFrame, torch.Tensor]:
+def get_bible(version):
     books_df = read_books_df(
         f"https://github.com/hoffa/bible-search/releases/download/v1/{version}_books.parquet"
     )
@@ -54,11 +48,11 @@ def get_bible(
 
 
 @st.cache(allow_output_mutation=True, show_spinner=False)
-def get_transformer() -> SentenceTransformer:
+def get_transformer():
     return get_model()
 
 
-def get_verse_url(result: SearchResult, version: str) -> str:
+def get_verse_url(result, version):
     # BBE isn't on BibleGateway
     version = "niv" if version == "bbe" else version
     return "https://www.biblegateway.com/passage/?" + urllib.parse.urlencode(

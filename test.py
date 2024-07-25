@@ -12,12 +12,12 @@ from search import (
 )
 
 
-def path_or_url(path: str, url: str) -> str:
+def path_or_url(path, url):
     return path if Path(path).exists() else url
 
 
 class Test(unittest.TestCase):
-    def test_search(self) -> None:
+    def test_search(self):
         books = read_books_df(
             path_or_url(
                 "dist/web_books.parquet",
@@ -46,7 +46,7 @@ class Test(unittest.TestCase):
             "Love is patient and is kind; love doesn't envy. Love doesn't brag, is not proud,",
         )
 
-    def test_encode(self) -> None:
+    def test_encode(self):
         self.assertEqual(
             list(read_text(Path("dist/t_web.csv")))[42],
             {
@@ -61,7 +61,7 @@ class Test(unittest.TestCase):
         embedding = next(read_embeddings(Path("dist/t_web.csv")))
         self.assertEqual(embedding["vid"], 1001001)
 
-    def test_vid(self) -> None:
+    def test_vid(self):
         self.assertEqual(to_vid(999, 999, 999), 999_999_999)
         self.assertEqual(to_vid(1, 23, 456), 1_023_456)
         self.assertEqual(to_vid(1, 23), 1_023_000)
