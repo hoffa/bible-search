@@ -1,4 +1,4 @@
-sentence-transformers==2.*
+sentence-transformers==3.*
 streamlit==1.*
 pandas==2.*
 torch==2.*
